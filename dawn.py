@@ -3,22 +3,9 @@ from discord.ext import commands
 import asyncio
 import os
 from dotenv import load_dotenv
-import logging
 from datetime import datetime, timezone
 import sys
 import json
-
-if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8')
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('joy.log', encoding='utf-8'),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -79,17 +66,17 @@ class JoyBot(commands.Bot):
         ]
         for ext in extensions:
             await self.load_extension(ext)
-        logging.info("Joy's extensions loaded successfully!")
+        print("extensions loaded")
 
     async def on_ready(self):
         if not self.synced:
             await self.tree.sync()
             self.synced = True
-            logging.info("Command tree synced")
+            print("command tree synced")
 
         self.invite_link = f"https://discord.com/oauth2/authorize?client_id={self.user.id}&permissions=8&scope=bot%20applications.commands"
-        logging.info(f'Joy is ready! Logged in as {self.user} (ID: {self.user.id})')
-        logging.info(f'Invite link: {self.invite_link}')
+        print(f'ready as {self.user} ({self.user.id})')
+        print(f'invite: {self.invite_link}')
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
